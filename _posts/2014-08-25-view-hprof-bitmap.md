@@ -29,11 +29,11 @@ tags: hprof MAT android bitmap
 	在 mat 中 bitmap的属性中可以看到
 	![](/assets/posts/2014-08-25-view-hprof-bitmap/bitmap-property.png)
 
-- 使用GIMP查看图片
+# 4.使用GIMP查看图片#
 
-	使用 GIMG 打开刚才存储的 bitmap.data。  
-	图片类型选择 RGB Alpha ,  
-	宽度和高度，填入上一个步骤获取到的宽高，  
-	然后打开。
+使用 GIMG 打开刚才存储的 bitmap.data。  
+图片类型选择 RGB Alpha ,  
+宽度和高度，填入上一个步骤获取到的宽高，  
+然后打开。
 
-	![](/assets/posts/2014-08-25-view-hprof-bitmap/gimg.png)
+![](/assets/posts/2014-08-25-view-hprof-bitmap/gimg.png)
