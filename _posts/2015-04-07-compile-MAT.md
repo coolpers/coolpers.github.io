@@ -39,20 +39,20 @@ dtfj说明 https://www.ibm.com/developerworks/java/jdk/tools/dtfj.html
 进入 parent 目录，查看 pom.xml ，里边列举了针对不同平台的配置，我们可以对其进行修改，只输出我们关心的平台，比如windows
 
 		<groupId>org.eclipse.tycho</groupId>
-							<artifactId>target-platform-configuration</artifactId>
-							<version>${tycho-version}</version>
-							<configuration>
-								<environments>
-									<environment>
-										<os>win32</os>
-										<ws>win32</ws>
-										<arch>x86</arch>
-									</environment>
-									<environment>
-										<os>win32</os>
-										<ws>win32</ws>
-										<arch>x86_64</arch>
-									</environment>
+			<artifactId>target-platform-configuration</artifactId>
+			<version>${tycho-version}</version>
+			<configuration>
+				<environments>
+					<environment>
+						<os>win32</os>
+						<ws>win32</ws>
+						<arch>x86</arch>
+					</environment>
+					<environment>
+						<os>win32</os>
+						<ws>win32</ws>
+						<arch>x86_64</arch>
+					</environment>
 
 编译，直接运行：
 	
