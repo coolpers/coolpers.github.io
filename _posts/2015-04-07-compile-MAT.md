@@ -12,6 +12,7 @@ tags: MAT
 MAT 官网介绍 https://eclipse.org/mat/
 
 MAT 开源代码为 svn 仓库，可以通过官网的 `View SVN` 找到下载地址。这里以1.4.0 版本为例：
+
 >  https://dev.eclipse.org/svnroot/tools/org.eclipse.mat/tags/R_1.4.0
 
 
@@ -36,6 +37,7 @@ dtfj说明 https://www.ibm.com/developerworks/java/jdk/tools/dtfj.html
 
 # 4. 编译 #
 进入 parent 目录，查看 pom.xml ，里边列举了针对不同平台的配置，我们可以对其进行修改，只输出我们关心的平台，比如windows
+
 		<groupId>org.eclipse.tycho</groupId>
 							<artifactId>target-platform-configuration</artifactId>
 							<version>${tycho-version}</version>
