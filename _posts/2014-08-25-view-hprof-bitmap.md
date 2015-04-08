@@ -27,6 +27,7 @@ tags: hprof MAT android bitmap
 - 查看图片的宽高
 
 	在 mat 中 bitmap的属性中可以看到
+
 	![](/assets/posts/2014-08-25-view-hprof-bitmap/bitmap-property.png)
 
 # 4.使用GIMP查看图片#
