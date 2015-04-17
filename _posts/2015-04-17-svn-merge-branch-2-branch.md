@@ -78,8 +78,10 @@ Branch 2：
 
 
 冲突目录：
+
 ![](/assets/posts/2015-04-17-svn-merge-branch-2-branch/confict-1.6.PNG)
 
+confict-1.6.PNG
 
 
 合并后手工打开冲突文件：
