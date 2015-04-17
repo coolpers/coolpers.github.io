@@ -23,7 +23,7 @@ tags: svn branch merge
 
 Svn branch 间的关系如下：
 
-![](/assets/posts/2014-08-25-view-hprof-bitmap/revision-graph.PNG)
+![](/assets/posts/2015-04-17-svn-merge-branch-2-branch/revision-graph.PNG)
 
 - 16781 AppSearch_test 为主干代码
 - 16808 在主干进行了代码修改，添加了一行代码 : modify by trunk
@@ -69,28 +69,28 @@ Branch 2：
 
 使用 merge a range of revisions方式
 
-![](/assets/posts/2014-08-25-view-hprof-bitmap/select-merge-type.png)
+![](/assets/posts/2015-04-17-svn-merge-branch-2-branch/select-merge-type.png)
 
 
 合并后工具的提示：
 
-![](/assets/posts/2014-08-25-view-hprof-bitmap/merge-warn-1.6.png)
+![](/assets/posts/2015-04-17-svn-merge-branch-2-branch/merge-warn-1.6.png)
 
 
 冲突目录：
-![](/assets/posts/2014-08-25-view-hprof-bitmap/confict-1.6.png)
+![](/assets/posts/2015-04-17-svn-merge-branch-2-branch/confict-1.6.png)
 
 confict-1.6.PNG
 
 
 合并后手工打开冲突文件：
 这个看起来还是没问题的，代码全都在，如果采用手工解决是没问题的。。
-![](/assets/posts/2014-08-25-view-hprof-bitmap/merge-result-1.6-conflict.png)
+![](/assets/posts/2015-04-17-svn-merge-branch-2-branch/merge-result-1.6-conflict.png)
 
 
 使用 tortoise merge 工具合并（问题所在）
 
-![](/assets/posts/2014-08-25-view-hprof-bitmap/conflict-edit.1.6.png)
+![](/assets/posts/2015-04-17-svn-merge-branch-2-branch/conflict-edit.1.6.png)
 
 
 使用工具合并后，发现 branch 2 修改的代码丢了。
@@ -136,7 +136,7 @@ confict-1.6.PNG
 
 同样采用和 1.6 上述步骤一样的办法，采用 non-interactive 模式，先合并，随后一并解决冲突。
 
-![](/assets/posts/2014-08-25-view-hprof-bitmap/resolve-dialog.png)
+![](/assets/posts/2015-04-17-svn-merge-branch-2-branch/resolve-dialog.png)
 
 从合并的提示来看，跟1.6 有不同。多了一句话：
 
