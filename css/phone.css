@@ -1,0 +1,102 @@
+
+@media screen and (max-width: 500px){
+	#content {
+		padding: 0.3em;
+	}
+
+	.body {
+		padding: 0.3em;
+	}
+
+	#wrapper {
+      	max-width: 100%;
+      	min-width: 10em;  
+      	margin: 0;  
+      	 -moz-border-radius: 0;
+  		-webkit-border-radius: 0;
+  		border-radius: 0;  
+  	}
+
+  	#header {
+  		-moz-border-radius-topleft: 0;
+		  -webkit-border-top-left-radius: 0;
+		  -moz-border-radius-topright: 0;
+		  -webkit-border-top-right-radius: 0;  
+		  border-top-left-radius: 0;  
+		  border-top-right-radius: 0;  
+  	}
+
+  	#menu ul {	
+	  -webkit-margin-before: 0;
+	  -webkit-margin-after: 0;
+	  -webkit-margin-start: 0;
+	  -webkit-margin-end: 0;
+	  -webkit-padding-start: 10px;
+	  overflow-x:visible;
+	  height: 40px;
+	}
+
+	.body h1 {
+    font-size: 28px; }
+
+	.body h2 {
+    font-size: 28px; }
+
+	.body h3 {
+	    font-size: 22px; }
+	    
+	.body h4 {
+	    font-size: 18px; }
+
+	.post-title {
+	  font-size: 36px;	  
+	}
+
+}
+
+@media screen and (max-width: 500px) and (min-width: 400px){
+    
+  	#header #text {
+  		font-size: 24px;
+  		margin-top: -2px;
+  	}
+
+  	#header #img img {  
+	  width: 32px;
+	  height: 32px;
+	}
+
+	#menu ul li a {
+		font-size: 12px;
+		padding: 0 0.2em;
+	}
+
+	#header {
+		padding: 12px;
+		height: 30px;
+	}
+
+ }
+
+@media screen and (max-width: 400px){
+
+	#header #text {
+  		font-size: 16px;
+  		margin-top: -2px;
+  	}
+
+  	#header #img img {  
+	  width: 21px;
+	  height: 21px;
+	}
+	
+	#menu ul li a {
+		font-size: 12px;
+		padding: 0 0.1em;
+	}
+	#header {
+		padding: 8px;
+		height: 20px;
+	}
+}
+
