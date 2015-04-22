@@ -1,7 +1,7 @@
 ---
 layout: master
 title: Blog
-full_posts: 5
+full_posts: 3
 ---
 
 
@@ -18,8 +18,7 @@ full_posts: 5
     <table class='post-list'>
     {% endif %}
     <tr>
-      <th><a href='{{ post.url }}'>{{ post.title }}</a></th>
-      <td>{{ post.date | date_to_string }}</td>      
+      <td><a href='{{ post.url }}'>{{ post.title }}</a></td>      
     </tr>
   {% endif %}
 {% endfor %}

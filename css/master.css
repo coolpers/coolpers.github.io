@@ -191,10 +191,8 @@ table.post-list a {
 
 table.post-list th {
   text-align: left;
-  width: 50%;
-  text-overflow:ellipsis; 
-  white-space:nowrap; 
-  overflow:hidden;
+  width: 50%;  
+  white-space:break-word;   
 }
 
 table.post-list td, table.post-list th {
