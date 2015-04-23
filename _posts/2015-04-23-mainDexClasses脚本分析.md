@@ -8,157 +8,8 @@ tags: MultiDex mainDexClasses
 
 # 1.前言 #
 <p style="text-indent:2em;">
-前面提到了<a href="https://coolpers.github.io/multidex/2015/04/13/multidex.html">multidex的打包过程</a>，对于哪些类需要打入主Dex中，SDK提供了mainDexClasses脚本来生成文件列表，这两天研究了下该脚本的实现。下面是mainDexClasses的shell脚本,windows下的bat脚本执行步骤一样。
+前面提到了<a href="https://coolpers.github.io/multidex/2015/04/13/multidex.html">multidex的打包过程</a>，对于哪些类需要打入主Dex中，SDK提供了mainDexClasses脚本来生成文件列表，这两天研究了下该脚本的实现。我们以mainDexClasses的shell脚本为例,windows下的bat脚本执行步骤一样。
 </p>
-
-<pre>
-<code>
-function makeTempJar ()
-{
-  local tempDir=/tmp
-  if [ ! -e "${tempDir}" ]; then
-    tempDir=.
-  fi
-  local tempfile="${tempDir}/mainDexClasses-$$.tmp.jar"
-  if [ -e "${tempfile}" ]; then
-    echo "Failed to create temporary file" >2
-    exit 6
-  fi
-  echo "${tempfile}"
-}
-
-function cleanTmp ()
-{
-  if [ -e "${tmpOut}" ] ; then
-    rm "${tmpOut}"
-  fi
-}
-
-
-# Set up prog to be the path of this script, including following symlinks,
-# and set up progdir to be the fully-qualified pathname of its directory.
-prog="$0"
-
-while [ -h "${prog}" ]; do
-    newProg=`/bin/ls -ld "${prog}"`
-    newProg=`expr "${newProg}" : ".* -> \(.*\)$"`
-    if expr "x${newProg}" : 'x/' >/dev/null; then
-        prog="${newProg}"
-    else
-        progdir=`dirname "${prog}"`
-        prog="${progdir}/${newProg}"
-    fi
-done
-oldwd=`pwd`
-progdir=`dirname "${prog}"`
-cd "${progdir}"
-progdir=`pwd`
-prog="${progdir}"/`basename "${prog}"`
-cd "${oldwd}"
-
-baserules="${progdir}"/mainDexClasses.rules
-if [ ! -r ${baserules} ]; then
-    echo `basename "$prog"`": can't find mainDexClasses.rules" 1>&2
-    exit 1
-fi
-
-jarfile=dx.jar
-libdir="$progdir"
-
-if [ ! -r "$libdir/$jarfile" ]; then
-    # set dx.jar location for the SDK case
-    libdir="$libdir/lib"
-fi
-
-
-if [ ! -r "$libdir/$jarfile" ]; then
-    # set dx.jar location for the Android tree case
-    libdir=`dirname "$progdir"`/framework
-fi
-
-if [ ! -r "$libdir/$jarfile" ]; then
-    echo `basename "$prog"`": can't find $jarfile" 1>&2
-    exit 1
-fi
-
-proguardExec="proguard.sh"
-proguard=${PROGUARD_HOME}/bin/${proguardExec}
-
-if [ ! -r "${proguard}" ]; then
-  # set proguard location for the SDK case
-  proguardBaseDir=`dirname "$progdir"`
-  # "${progdir}"/../..
-  proguardBaseDir=`dirname "$proguardBaseDir"`
-  proguard="${proguardBaseDir}"/tools/proguard/bin/${proguardExec}
-fi
-
-if [ ! -r "${proguard}" ]; then
-  # set proguard location for the Android tree case
-  proguardBaseDir=`dirname "$proguardBaseDir"`
-  # "${progdir}"/../../../..
-  proguardBaseDir=`dirname "$proguardBaseDir"`
-  proguard="${proguardBaseDir}"/external/proguard/bin/${proguardExec}
-fi
-
-if [ ! -r "${proguard}" ]; then
-    proguard="`which proguard`"
-fi
-
-if [ -z "${proguard}" -o ! -r "${proguard}" ]; then
-    proguard="`which ${proguardExec}`"
-fi
-
-if [ -z "${proguard}" -o ! -r "${proguard}" ]; then
-    echo `basename "$prog"`": can't find ${proguardExec}" 1>&2
-    exit 1
-fi
-
-shrinkedAndroidJar="${SHRINKED_ANDROID_JAR}"
-if [ -z "${shrinkedAndroidJar}" ]; then
-  shrinkedAndroidJar=shrinkedAndroid.jar
-fi
-
-if [ ! -r "${shrinkedAndroidJar}" ]; then
-  shrinkedAndroidJar=${libdir}/${shrinkedAndroidJar}
-fi
-
-if [ ! -r "${shrinkedAndroidJar}" ]; then
-    echo `basename "$prog"`": can't find shrinkedAndroid.jar" 1>&2
-    exit 1
-fi
-
-if [ "$OSTYPE" = "cygwin" ]; then
-    # For Cygwin, convert the jarfile path into native Windows style.
-    jarpath=`cygpath -w "$libdir/$jarfile"`
-  proguard=`cygpath -w "${proguard}"`
-  shrinkedAndroidJar=`cygpath -w "${shrinkedAndroidJar}"`
-else
-    jarpath="$libdir/$jarfile"
-fi
-
-if expr "x$1" : 'x--output' >/dev/null; then
-    exec 1>$2
-    shift 2
-fi
-
-if [ $# -ne 1 ]; then
-  echo "Usage : $0 [--output <output file>] <application path>" 1>&2
-  exit 2
-fi
-
-tmpOut=`makeTempJar`
-
-trap cleanTmp 0
-
-${proguard} -injars ${@} -dontwarn -forceprocessing  -outjars ${tmpOut} \
-  -libraryjars "${shrinkedAndroidJar}" -dontoptimize -dontobfuscate -dontpreverify \
-  -include "${baserules}" 1>/dev/null || exit 10
-
-java -cp "$jarpath" com.android.multidex.MainDexListBuilder "${tmpOut}" ${@} ||  exit 11
-
-</code>
-</pre>
-
 
 <p>
 该脚本大体分为3步：</br>
@@ -219,7 +70,7 @@ proguard官网绘制的执行流程图：</br>
 验证：</br>
 注释掉脚本中trap cleanTmp 0这一行，防止jar包在脚本执行完成后被删除。
 运行脚本完成后在/tmp目录下多了一个mainDexClasses-xxxxx.tmp.jar文件，将文件用JD-GUI打开，如下：</br>
-<img src="https://raw.githubusercontent.com/coolpers/coolpers.github.io/master/assets/posts/2015-04-23-mainDexClasses/proguard-sequence.png" alt="" width="60%"/></br>
+<img src="https://raw.githubusercontent.com/coolpers/coolpers.github.io/master/assets/posts/2015-04-23-mainDexClasses/tempjar.png" alt="" width="60%"/></br>
 只保留了符合keep规则的类。
 </p>
 
