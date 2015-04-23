@@ -35,26 +35,26 @@ include：包含的规则文件，使用的proguad规则是sdk/build-tools/21.1.
 <pre>
 <code>
  -keep public class * extends android.app.Instrumentation {
-    <init>();
+    &lt;init&gt;();
   }
   -keep public class * extends android.app.Application {
-    <init>();
+    &lt;init&gt;();
     void attachBaseContext(android.content.Context);
   }
   -keep public class * extends android.app.Activity {
-    <init>();
+    &lt;init&gt;();
   }
   -keep public class * extends android.app.Service {
-    <init>();
+    &lt;init&gt;();
   }
   -keep public class * extends android.content.ContentProvider {
-   <init>();
+   &lt;init&gt;();
   }
   -keep public class * extends android.content.BroadcastReceiver {
-   <init>();
+   &lt;init&gt;();
   }
   -keep public class * extends android.app.backup.BackupAgent {
-   <init>();
+   &lt;init&gt;();
   }
 
   -keep public class * extends java.lang.annotation.Annotation {
@@ -112,7 +112,7 @@ pathString是我们指定的输入文件组，封装成一个Path类，该类会
 <code>
     public void addRoots(ZipFile jarOfRoots) throws IOException {
         // keep roots
-        for (Enumeration<? extends ZipEntry> entries = jarOfRoots.entries();
+        for (Enumeration&lt;? extends ZipEntry&gt; entries = jarOfRoots.entries();
                 entries.hasMoreElements();) {
             ZipEntry entry = entries.nextElement();
             String name = entry.getName();
@@ -121,7 +121,7 @@ pathString是我们指定的输入文件组，封装成一个Path类，该类会
             }
         }
         // keep direct references of roots (+ direct references hierarchy)
-        for (Enumeration<? extends ZipEntry> entries = jarOfRoots.entries();
+        for (Enumeration&lt;? extends ZipEntry&gt; entries = jarOfRoots.entries();
                 entries.hasMoreElements();) {
             ZipEntry entry = entries.nextElement();
             String name = entry.getName();
