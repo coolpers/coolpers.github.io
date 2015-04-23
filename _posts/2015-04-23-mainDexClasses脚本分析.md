@@ -62,6 +62,7 @@ include：包含的规则文件，使用的proguad规则是sdk/build-tools/21.1.
   }
 </code>
 </pre>
+</p>
 proguard官网绘制的执行流程图：</br>
 <img src="https://raw.githubusercontent.com/coolpers/coolpers.github.io/master/assets/posts/2015-04-23-mainDexClasses/proguard-sequence.png" alt="" width="60%"/></br>
 结合proguard的执行流程图及脚本中参数，发现只执行了shrink操作。</br></br>
@@ -72,7 +73,7 @@ proguard官网绘制的执行流程图：</br>
 运行脚本完成后在/tmp目录下多了一个mainDexClasses-xxxxx.tmp.jar文件，将文件用JD-GUI打开，如下：</br>
 <img src="https://raw.githubusercontent.com/coolpers/coolpers.github.io/master/assets/posts/2015-04-23-mainDexClasses/tempjar.png" alt="" width="60%"/></br>
 只保留了符合keep规则的类。
-</p>
+
 
 
 # 3.MainDexListBuilder生成文件列表 #
