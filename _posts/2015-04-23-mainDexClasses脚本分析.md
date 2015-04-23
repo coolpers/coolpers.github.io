@@ -19,7 +19,7 @@ tags: MultiDex mainDexClasses
 第一步的环境检查就不说了，下面主要分析下后面两步。
 </p>
 
-# 2.proguard生成入口类jar包 #
+# 2.Proguard生成入口类jar包 #
 <p style="text-indent:2em;">
 环境检查完成后，脚本调用了proguard命令来生成一个tmp jar包，
 由于脚本中没有相关注释，刚开始看到这个步骤不知道是做什么的。
@@ -140,6 +140,7 @@ pathString是我们指定的输入文件组，封装成一个Path类，该类会
 </code>
 </pre>
 最后将获取的classNames输出到文件。至此主dex所需的类列表生成了。
+
 # 4.遇到的问题 #
 1. proguard源码分析，源码中使用了大量的装饰和访问设计模式，阅读起来比较难懂。
 2. proguard injars中包含已经混淆过的jar包，处理时会报“Unknown verification type [*] in stack map frame”错误，解决方案参见http://sourceforge.net/p/proguard/bugs/420/。
