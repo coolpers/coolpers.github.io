@@ -154,6 +154,8 @@ pathString是我们指定的输入文件组，封装成一个Path类，该类会
 
 # 4.遇到的问题 #
 1、 proguard源码分析，源码中使用了大量的装饰和访问设计模式，阅读起来比较难懂。
+
 2、 proguard injars中包含已经混淆过的jar包，处理时会报“Unknown verification type [*] in stack map frame”错误，解决方案参见http://sourceforge.net/p/proguard/bugs/420/。
+
 3、 class文件结构 http://1025250620.iteye.com/blog/1971213。
 
