@@ -11,11 +11,11 @@ tags: MultiDex mainDexClasses
 
 该脚本大体分为3步：
 
-1、环境检查，包括参数合法性检查，文件路经检查，proguard命令检查。
+1、 环境检查，包括参数合法性检查，文件路经检查，proguard命令检查。
 
-2、调用proguard生成一个tmp jar包。
+2、 调用proguard生成一个tmp jar包。
 
-3、将生成的tmp jar包和输入的文件组作为参数，调用com.android.multidex.MainDexListBuilder类生成文件列表。
+3、 将生成的tmp jar包和输入的文件组作为参数，调用com.android.multidex.MainDexListBuilder类生成文件列表。
 
 第一步的环境检查就不说了，下面主要分析下后面两步。
 
@@ -153,7 +153,7 @@ pathString是我们指定的输入文件组，封装成一个Path类，该类会
 最后将获取的classNames输出到文件。至此主dex所需的类列表生成了。
 
 # 4.遇到的问题 #
-1. proguard源码分析，源码中使用了大量的装饰和访问设计模式，阅读起来比较难懂。
-2. proguard injars中包含已经混淆过的jar包，处理时会报“Unknown verification type [*] in stack map frame”错误，解决方案参见http://sourceforge.net/p/proguard/bugs/420/。
-3. class文件结构 http://1025250620.iteye.com/blog/1971213。
+1、 proguard源码分析，源码中使用了大量的装饰和访问设计模式，阅读起来比较难懂。
+2、 proguard injars中包含已经混淆过的jar包，处理时会报“Unknown verification type [*] in stack map frame”错误，解决方案参见http://sourceforge.net/p/proguard/bugs/420/。
+3、 class文件结构 http://1025250620.iteye.com/blog/1971213。
 
