@@ -1,6 +1,5 @@
 ---
 layout: master
-title: About
 permalink: /about/
 ---
 
