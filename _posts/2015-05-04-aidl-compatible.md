@@ -161,7 +161,7 @@ Proxy 代表了调用方的接口，Stub代表了被调用方的实现。
 	static final int TRANSACTION_test = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
 	static final int TRANSACTION_test2 = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
 
-所以一旦你的 aidl 发布出去，ipc调用的话，跟这个函数名字叫什么其实关系不大（你完全可以重命名服务端的函数名，但让没这个必要），只是根据这个id做关联调用。
+所以一旦你的 aidl 发布出去，ipc调用的话，跟这个函数名字叫什么其实关系不大（你完全可以重命名服务端的函数名，当然没这个必要），只是根据这个id做关联调用。
 
 # aidl文件修改对asInterface 的影响 #
 
@@ -206,6 +206,7 @@ Proxy 代表了调用方的接口，Stub代表了被调用方的实现。
 引用Android developer Dianne Hackborn 的话：
 
 > The formally correct thing is to make the functionality be on a new interface that the app explicitly requests.  (The interface can also contain all of the original functionality for simplicity if you want.)  This is basically the COM interface versioning approach.
-
+      
+>       
 >
 The quick and dirty approach is to take advantage of knowing that the current aidl compiler assigns an interface's methods their identifiers in the order they are declared, so you can add new methods to the end without changing the identifiers for the existing ones.
