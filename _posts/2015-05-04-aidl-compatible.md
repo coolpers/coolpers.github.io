@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Android aidl backward&forward compatible"
+title:  "Android aidl backward & forward compatible"
 date:   2015-05-04
 categories: aidl
 tags: aidl
@@ -136,7 +136,7 @@ aidl实现代码：
     return binder;
 
 
-调用aidl代码
+调用代码
 
 	IHostLib hostapi = IHostLib.Stub.asInterface(binder);
 	String result = hostapi.test("hello");
@@ -148,9 +148,11 @@ aidl实现代码：
 2. 通过interface 调用到proxy 的 test() 函数。
 3. 通过进程间通信，调用到了 Stub的 onTransact() 函数
 
+
 Proxy 代表了调用方的接口，Stub代表了被调用方的实现。
 
-两者之间比如这个test()函数根据 
+
+两者之间比如这个test()函数是根据 
 
 	static final int TRANSACTION_test = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
 
@@ -201,8 +203,9 @@ Proxy 代表了调用方的接口，Stub代表了被调用方的实现。
 
 上边提到的只是最简单的一种处理方式，某些情况下不是最好的方式。
 
-引用前Android核心开发者 Dianne Hackborn 的话：
+引用Android developer Dianne Hackborn 的话：
 
 > The formally correct thing is to make the functionality be on a new interface that the app explicitly requests.  (The interface can also contain all of the original functionality for simplicity if you want.)  This is basically the COM interface versioning approach.
-> 
+
+>
 The quick and dirty approach is to take advantage of knowing that the current aidl compiler assigns an interface's methods their identifiers in the order they are declared, so you can add new methods to the end without changing the identifiers for the existing ones.
