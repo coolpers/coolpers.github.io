@@ -1,6 +1,6 @@
 ---
 layout: master
-full_posts: 3
+full_posts: 6
 ---
 
 
@@ -9,7 +9,7 @@ full_posts: 3
   <div class='post'>
     <span class='date'>{{post.date | date_to_string}}</span>
     <h1><a href='{{post.url}}' class="post-title">{{post.title}}</a></h1>
-    <div class='body'>{{post.content}}</div>    
+    <div class='body post_at_index' pageurl='{{post.url}}'>{{post.content}}</div>    
   </div>
   {% else %}
     {% if forloop.index == page.full_posts %}
@@ -22,3 +22,52 @@ full_posts: 3
   {% endif %}
 {% endfor %}
 </table>
+
+
+<script type="text/javascript">
+      var foo = function() {      
+        var addElipsis = false;  
+        function traverse($node, len, maxCount) {
+          var reachMaxCount = len > maxCount;
+          if (reachMaxCount) {
+            $node.hide();
+          }
+          var $contents = $node.contents();
+          for (var i = 0; i < $contents.length; ++i) {
+            if (reachMaxCount) {
+              $contents.eq(i).hide();
+              continue;
+            }
+            if ($contents[i].nodeType == 3) { // TextNode
+              var tmp = len;
+              var s = $contents[i].nodeValue;
+              len += s.length;
+              reachMaxCount = len > maxCount;
+              if (reachMaxCount && $contents[i].parentNode.nodeName != 'A') {
+                if (addElipsis == false) {
+                    addElipsis = true;
+                    $contents[i].nodeValue = s.substring(0, maxCount - tmp) + "…";
+                } else {
+                    $contents[i].nodeValue = s.substring(0, maxCount - tmp);
+                }                
+
+              }
+            }
+            else if ($contents[i].nodeType == 1) { // Element
+              len = traverse($contents.eq(i), len, maxCount);
+            }
+          }
+          return len;
+        }
+
+        $('.post_at_index').each(function() {
+          addElipsis = false;
+          var count = traverse($(this), 0, {{ site.description_length }});
+          if (count > {{ site.description_length }}) {
+            var thisUrl = $(this).attr('pageurl');                        
+            $(this).after('\n<a href="' + thisUrl + '" rel="nofollow">' + '阅读全文</a>');
+          }
+        });
+      };
+      foo();
+    </script>
