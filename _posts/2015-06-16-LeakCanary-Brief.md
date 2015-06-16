@@ -24,7 +24,7 @@ tags: LeakCanary MAT
 *	友好的界面展示和通知。
 
 假如你现在想集成LeakCanary到自己的工程中，那么你只需要做以下工作：
-1. 导入leakcanary的jar包到自己工程（下载链接：![leakcanary.zip](/assets/posts/2015-06-16-LeakCanary-Brief/leakcanary.zip)）
+1. 导入leakcanary的jar包到自己工程（下载链接：[leakcanary.zip](/assets/posts/2015-06-16-LeakCanary-Brief/leakcanary.zip)）
 2. 在4.0以上，只需要在工程的Application的onCreate函数中按照如下的方式加入一行代码：
 
 
