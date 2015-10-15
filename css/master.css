@@ -169,8 +169,8 @@ img.right {
   font-size: 1.5em;
 }
 
-content p {
-  line-height: 300%;
+#content p {
+  line-height: 150%;
   letter-spacing: -0.03em;
 }
 
@@ -412,7 +412,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .body p {
-  line-height: 300%;
+  margin:30px
   letter-spacing: -0.03em;
 }
 
