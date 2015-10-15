@@ -410,3 +410,8 @@ h1, h2, h3, h4, h5, h6 {
 .body img {
   max-width: 100%;
 }
+
+.body p {
+  margin-top:15px;
+  margin-bottom:15px;
+}
