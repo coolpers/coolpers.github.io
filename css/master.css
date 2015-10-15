@@ -410,3 +410,9 @@ h1, h2, h3, h4, h5, h6 {
 .body img {
   max-width: 100%;
 }
+
+.body p {
+  line-height: 300%;
+  letter-spacing: -0.03em;
+}
+
