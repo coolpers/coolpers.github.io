@@ -43,6 +43,8 @@ zygote32位监听的端口就是--socket-name=zygote
 
 这个值由PackageManagerService在做scanPackageLI的时候决定，具体这个值的得出有一个公式化的过程，主要就是判断这个apk有没有使用native的库，如果使用了，那就看使用了的是32位的还是64位的，另外还要看系统支持的是32位还是64位的。
 
+> 在64位设备上，如果app的 lib 目录下 存在armeabi，则以32位兼容方式运行。如果存在arm64-v8a 则已64位运行。如果没有任何 so，则 primaryCpuAbi 为空，按照系统的默认配置决定，也就是64位运行。
+
 根据这些因素就可以决定这个apk是应该是32位的还是64位的。
  
 以上就是Android L 64位系统兼容32位应用的基本实现过程。
