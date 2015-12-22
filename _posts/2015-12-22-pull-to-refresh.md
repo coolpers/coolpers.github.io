@@ -35,6 +35,7 @@ tags: android pulltorefresh
 
 &nbsp;&nbsp;&nbsp;&nbsp;目前手机百度、微信、FaceBook、新浪微博等大量应用都有此效果，最早的开源项目是由johannilsson在2011年1月9日发布的[android-pulltorefresh](https://github.com/johannilsson/android-pulltorefresh)不过此开源项目已经不维护，且作者推荐使用v4 support library中的[SwipeRefreshLayout](https://developer.android.com/reference/android/support/v4/widget/SwipeRefreshLayout.html)。另外由chrisbanes发布的开源项目[Android-PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh) 不仅支持ListView下拉刷新，还支持GrdiView等其他控件支持下拉刷新效果。本篇分析下这两个框架的使用与原理。
 
+<br><br>
 
 #二、下拉刷新交互#
 下图来自johannilsson GitHub首页：
@@ -43,12 +44,15 @@ tags: android pulltorefresh
 下拉刷新主要流程：      
 ![](/assets/posts/2015-12-22-pull-to-refresh/ux_pull-to-refresh.png)
 
-</br>
-&nbsp;&nbsp;&nbsp;&nbsp;上面介绍的交互都是最常见的流程，如果对交互细节与提升感兴趣可以看下[有趣的下拉刷新](http://isux.tencent.com/pull-down-to-reflesh.html)与[快来QQ空间玩小鸟！~](http://djt.qq.com/article/view/911)这两篇文章讨论如何把下拉刷新更趣味。      
-</br>
-&nbsp;&nbsp;&nbsp;&nbsp;此控件最早是在IOS平台，当移植到Andorid平台是并不是一片赞誉，感兴趣可以看下Cyril Mottier的评论["Pull-to-refresh": An Anti UI Pattern on Android](http://cyrilmottier.com/2012/03/28/the-pull-to-refresh-an-anti-ui-pattern-on-android/) ，还有来自著名博客Android UI Patterns不一样的观点[Pull-to-refresh, or not?](http://www.androiduipatterns.com/2012/03/pull-to-refresh-or-not.html)与[Google's first pull-to-refresh - a good first try](http://www.androiduipatterns.com/2013/06/googles-first-pull-to-refresh-good.html)。
 
+&nbsp;&nbsp;&nbsp;&nbsp;上面介绍的交互都是最常见的流程，如果对交互细节与提升感兴趣可以看下[有趣的下拉刷新](http://isux.tencent.com/pull-down-to-reflesh.html)与[快来QQ空间玩小鸟！~](http://djt.qq.com/article/view/911)这两篇文章讨论如何把下拉刷新更趣味。      
+
+&nbsp;&nbsp;&nbsp;&nbsp;此控件最早是在IOS平台，当移植到Andorid平台是并不是一片赞誉，感兴趣可以看下Cyril Mottier的评论["Pull-to-refresh": An Anti UI Pattern on Android](http://cyrilmottier.com/2012/03/28/the-pull-to-refresh-an-anti-ui-pattern-on-android/) ，还有来自著名博客Android UI Patterns不一样的观点[Pull-to-refresh, or not?](http://www.androiduipatterns.com/2012/03/pull-to-refresh-or-not.html)与[Google's first pull-to-refresh - a good first try](http://www.androiduipatterns.com/2013/06/googles-first-pull-to-refresh-good.html)。
+<br><br>
 #三、chrisbanes Android-PullToRefresh开源项目#
+
+项目地址： [Android-PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh)      
+
 
 ##1.控件特点##
 
@@ -58,9 +62,8 @@ tags: android pulltorefresh
 &nbsp;&nbsp;&nbsp;&nbsp;ListView、ExpandableListView、GridView、WebView、ScrollView、HorizontalScrollView、ViewPager、ListFragment  
 * 提供滚动到列表底部的监听  
 * 大量定制选项  
-
+<br><br>
 ##2.控件使用##
-项目地址：[Android-PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh)      
 
 * 布局文件      
       
@@ -95,15 +98,15 @@ tags: android pulltorefresh
 				new GetDataTask().execute();
 			}
 		});
-
+<br><br>
 ##3. 源码分析##
 
 
 类图      
 ![](/assets/posts/2015-12-22-pull-to-refresh/class_diagrams.png)
 
-由类图可以看出此项目的主要功能类结构，此处仅分析最核心的PullToRefreshBase，通过ListView下拉刷新的一种情形分析整个流程。分析主要分为4块，布局、下拉手势判断、视图随手指移动与松手后自动回滚。  
-
+&nbsp;&nbsp;&nbsp;&nbsp;由类图可以看出此项目的主要功能类结构，此处仅分析最核心的PullToRefreshBase，通过ListView下拉刷新的一种情形分析整个流程。分析主要分为4块，布局、下拉手势判断、视图随手指移动与松手后自动回滚。  
+<br><br>
 ###1 布局###
 
 	private void init(Context context, AttributeSet attrs) {
@@ -214,10 +217,10 @@ tags: android pulltorefresh
 		setPadding(pLeft, pTop, pRight, pBottom);
 	}
 
-PullToRefreshBase继承自LinearLayout，好处在于此效果视图都是横向或者纵向依次排布，完全可以复用LinearLayout排布视图的逻辑，不用自己再覆写onMeasure, onLayout去测量与排布视图，只需要设置Orientation属性并依次添加Header、RefreshableView、FooterView3个视图。      
+&nbsp;&nbsp;&nbsp;&nbsp;PullToRefreshBase继承自LinearLayout，好处在于此效果视图都是横向或者纵向依次排布，完全可以复用LinearLayout排布视图的逻辑，不用自己再覆写onMeasure, onLayout去测量与排布视图，只需要设置Orientation属性并依次添加Header、RefreshableView、FooterView3个视图。      
 
-HeaderView在refreshLoadingViewsSize函数中通过设置-paddingTop达到此默认状态不展示顶部视图的效果。布局已经完成接下来看下第2块，控件是如果进行手势判断的。
-
+&nbsp;&nbsp;&nbsp;&nbsp;HeaderView在refreshLoadingViewsSize函数中通过设置-paddingTop达到此默认状态不展示顶部视图的效果。布局已经完成接下来看下第2块，控件是如果进行手势判断的。
+<br><br><br><br>
 ###2 下拉手势判断###
 
 	@Override
@@ -336,11 +339,10 @@ HeaderView在refreshLoadingViewsSize函数中通过设置-paddingTop达到此默
 
 		return false;
 	}
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;此控件在刷新视图外添加一层LinearLayout，然后通过onInterceptTouchEvent函数判断如何满足下拉刷新条件进行拦截手势处理，不继续派发给刷新视图，因为这两个条件此控件可以支持任意视图，例如ListView、Gridview，仅需要这些视图然后告知PullToRefreshBase何时满足下拉刷新条件即可（ListView下拉刷新是告知已到达ListView顶部）。
 
-此控件在刷新视图外添加一层LinearLayout，然后通过onInterceptTouchEvent函数判断如何满足下拉刷新条件进行拦截手势处理，不继续派发给刷新视图，因为这两个条件此控件可以支持任意视图，例如ListView、Gridview，仅需要这些视图然后告知PullToRefreshBase何时满足下拉刷新条件即可（ListView下拉刷新是告知已到达ListView顶部）。
-
-</br></br>
-
+<br><br><br><br>
 ###Android 事件传递流程###
 
 ![](/assets/posts/2015-12-22-pull-to-refresh/touch.png)      
@@ -350,11 +352,11 @@ HeaderView在refreshLoadingViewsSize函数中通过设置-paddingTop达到此默
 拦截: ViewGroup.onInterceptTouchEvent(MotionEvent)      
 处理: ViewGroup/View.onTouchEvent(MotionEvent)      
 
-Android事件每隔几毫秒派发一次，在View层传递主要涉及以上3个函数，由上图的ViewRoot向下逐层传递，每层仅有一个视图满足传递条件，通过调用满足条件子视图的dispatchTouchEvent向下传递事件，如果有视图消耗此事件再向上返回true，表示此次事件已经被处理。
+&nbsp;&nbsp;&nbsp;&nbsp;Android事件每隔几毫秒派发一次，在View层传递主要涉及以上3个函数，由上图的ViewRoot向下逐层传递，每层仅有一个视图满足传递条件，通过调用满足条件子视图的dispatchTouchEvent向下传递事件，如果有视图消耗此事件再向上返回true，表示此次事件已经被处理。
 
 
 * 2）单次传递规律      
-向下:      
+向下传递:      
 
 		ViewGroup.dispatchTouchEvent()      
 			通过当前所有子视图添加顺序（addView）的反序遍历，是否满足以下条件      
@@ -374,8 +376,8 @@ Android事件每隔几毫秒派发一次，在View层传递主要涉及以上3�
 			setOnTouchListener      
 			setOnItemClickListener    
 
-向上：      
-      
+向上传递：      
+
 		有视图处理，onTouchEvent return true（消耗），View.dispatchTouchEvent()逐层返回true。            
 		最底层子视图未处理，会返回上层，父视图是否处理。      
 
@@ -394,8 +396,8 @@ MotionEvent
 多点缩放：ScaleGestureDetector
 
 
-以上比较简单的总结Touch事件，详细可查看文档[Mastering the Android Touch System](http://wugengxin.cn/download/pdf/android/PRE_andevcon_mastering-the-android-touch-system.pdf)
-
+&nbsp;&nbsp;&nbsp;&nbsp;以上比较简单的总结Touch事件，详细可查看文档[Mastering the Android Touch System](http://wugengxin.cn/download/pdf/android/PRE_andevcon_mastering-the-android-touch-system.pdf)
+<br><br><br><br>
 ###3 视图随手指移动###
 
 	@Override
@@ -572,10 +574,10 @@ onTouchEvent函数中通过pullEvent处理视图跟随手指移动，通过smoot
 				break;
 		}
 	}
-
+<br><br><br><br>
 ###视图移动方法###
 
-此控件通过scrollTo函数来移动视图，目前已知有4种实现视图移动的方法：      
+&nbsp;&nbsp;&nbsp;&nbsp;此控件通过scrollTo函数来移动视图，目前已知有4种实现视图移动的方法：      
 
 方法|修改值|效果|
 ----|-----|-------|
@@ -584,7 +586,7 @@ onTouchEvent函数中通过pullEvent处理视图跟随手指移动，通过smoot
 2|x,y|修改left,top,right,bottom移动视图,通过view.layout或者view.offsetTopAndBottom、view.offsetLeftAndRight函数达到效果，ListView控制Item移动使用的是后者。      
 3|padding|最早的johannilsson实现的下拉刷新就是基于这种，不过需要每次都重新measure、layout才能生效。      
 4|margin|从来没见过哪个开源控件使用此种方式实现，不过也是一种使视图位置改变的一种办法。      
-
+<br><br><br><br>
 ###4 视图自动滚动 ###
 
 	final void setState(State state, final boolean... params) {
@@ -753,10 +755,10 @@ onTouchEvent函数中通过pullEvent处理视图跟随手指移动，通过smoot
 			}
 		}
 	}
-
+<br><br><br><br>
 ###视图自动滚动方法###
 * 自动滚动的循环方式：
-
+<br><br>
 * 1.使用Handler      
 
 		class ScrollRunnable implements Runnable {
@@ -770,8 +772,8 @@ onTouchEvent函数中通过pullEvent处理视图跟随手指移动，通过smoot
 		    }
 		};
 
-Handler发出一个消息，执行此消息时如果满足判断，改变位置再发出一个Handler消息。
-
+&nbsp;&nbsp;&nbsp;&nbsp;Handler发出一个消息，执行此消息时如果满足判断，改变位置再发出一个Handler消息。
+<br><br>
 * 2.利用系统机制
 
 		@Override
@@ -783,15 +785,15 @@ Handler发出一个消息，执行此消息时如果满足判断，改变位置�
 		    }
 		}
     
-调用invalidate()函数后，最终会执行onDraw，onDraw中会调用computeScroll()函数。如果未到指定位置，再次出发刷新，达到循环的效果。
-
+&nbsp;&nbsp;&nbsp;&nbsp;调用invalidate()函数后，最终会执行onDraw，onDraw中会调用computeScroll()函数。如果未到指定位置，再次出发刷新，达到循环的效果。
+<br><br>
 * 3.使用动画
 
 		ObjectAnimator yAnimator = ObjectAnimator.ofFloat(view, "translationY", fromY, toY);
 
 
-这种可以实现效果，在Android 3.0以下需要使用nineoldanimation.jar开源库，框架通过修改视图的Matix达到在Android 3.0以下视图视觉上发生移动，但是视图的位置并未发生改变导致点击视图并不一定触发视图的点击事件。
-
+&nbsp;&nbsp;&nbsp;&nbsp;这种可以实现效果，在Android 3.0以下需要使用nineoldanimation.jar开源库，框架通过修改视图的Matix达到在Android 3.0以下视图视觉上发生移动，但是视图的位置并未发生改变导致点击视图并不一定触发视图的点击事件。
+<br><br>
 * 自动滚动循环过程中获取当前位置
 	
 	    // 需要执行自动滚动处调用      
@@ -814,15 +816,15 @@ Handler发出一个消息，执行此消息时如果满足判断，改变位置�
 		        }  
 		    }  
 	    }  
-
-Scroller本身并不控制视图的移动，仅仅是提供数值。通过当前消耗时间占总时间的比例乘以总长度，算出当前移动的距离。
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Scroller本身并不控制视图的移动，仅仅是提供数值。通过当前消耗时间占总时间的比例乘以总长度，算出当前移动的距离。
 如果希望减速、加速滚动等可以使用Interpolator 插值器，详见：[android动画（一）Interpolator](http://my.oschina.net/banxi/blog/135633)
+<br><br><br><br>
+#四、Android support v4 SwipeRefreshLayout#
+&nbsp;&nbsp;&nbsp;&nbsp;Android V4 在19.1与20分别提供两种样式的下拉刷新效果
 
-#三、Android support v4 SwipeRefreshLayout#
-Android V4 在19.1与20分别提供两种样式的下拉刷新效果
-
-Android support v4 19.1的效果如下，下拉时ListView可以跟随手指移动，但是加载视图并不是在ListView的上面，而是叠在ListView顶部。      
+&nbsp;&nbsp;&nbsp;&nbsp;Android support v4 19.1的效果如下，下拉时ListView可以跟随手指移动，但是加载视图并不是在ListView的上面，而是叠在ListView顶部。      
 ![](/assets/posts/2015-12-22-pull-to-refresh/SwipeRefreshLayout_19.png)      
-
-Android support v4 20的效果如下，下拉时ListView不会跟随手指移动。
+<br><br><br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Android support v4 20的效果如下，下拉时ListView不会跟随手指移动。
 ![](/assets/posts/2015-12-22-pull-to-refresh/SwipeRefreshLayout_20.png)      
