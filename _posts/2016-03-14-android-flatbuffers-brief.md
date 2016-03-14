@@ -1,12 +1,10 @@
-
 ---
 layout: post
 title:  "android FlatBuffers剖析"
 date:   2016-03-14
-categories: android | flatbuffers
+categories: android
 tags: android flatbuffers
 ---
-
 # android FlatBuffers剖析 #
 
 
