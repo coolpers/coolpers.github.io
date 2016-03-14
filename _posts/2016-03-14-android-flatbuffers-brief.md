@@ -221,7 +221,7 @@ FlatBuffers对各种基本数据的存储都是按照小端模式来进行的，
 * 写入数据方向和读取数据方向不同  
 和一般向ByteBuffer写入数据的习惯不同，FlatBuffers向ByteBuffer中写入数据的顺序是从ByteBuffer的尾部向头部填充，由于这种增长方向和ByteBuffer默认的增长方向不同，因此FlatBuffers在向ByteBuffer中写入数据的时候就不能依赖ByteBuffer的position来标记有效数据位置，而是自己维护了一个space变量来指明有效数据的位置，在分析FlatBuffersBuilder的时候要特别注意这个变量的增长特点。但是，和数据的写入方向不同的是，FlatBuffers从ByteBuffer中解析数据的时候又是按照ByteBuffer正常的顺序来进行的。FlatBuffers这样组织数据存储的好处是，在从左到右解析数据的时候，能够保证最先读取到的就是整个ByteBuffer的概要信息（例如Table类型的vtable字段），方便解析。如下图所示：
 
-![01_FlatBuffers中ByteBuffer数据增长方向](/assets/posts/2016-03-14-android-flatbuffers/01_FlatBuffers中ByteBuffer数据增长方向.png)
+![01_FlatBuffers中ByteBuffer数据增长方向](/assets/posts/2016-03-14-android-flatbuffers/01_flatbuffers中ByteBuffer数据增长方向.png)
 
 但是为什么FlatBuffers要费劲地在写的时候将数据做逆向增长？这个我也确实没有想到一个好的原因，我认为读写按照相同的顺序完全可以根据绝对地址来实现数据写入和定位读取，这个大家想到有什么好的原因可以来讨论一下。
 
@@ -304,7 +304,7 @@ FlatBuffers对各种基本数据的存储都是按照小端模式来进行的，
 createString函数首先将字符串按照utf-8的方式进行了编码，并且在存储字符串数据之前先写了一个字节的0，以此作为字符串存储结尾的标志。大家注意下putByte这个函数的实现，可以发现每当FlatBuffers向ByteBuffer中写入数据的时候，都是先将*space*往ByteBuffer的头部移动指定长度，然后再写入数据，*space*的初始值为ByteBuffer.capacity，它维护了FlatBuffers向当前ByteBuffer写入位置信息，作用就类似于ByteBuffer原生的postion，是FlatBuffers逆向写入数据的产物。  
 FlatBuffers在实现字符串写入的时候将字符串的编码数组当做了一维的vector来实现，startVector函数是写入前的初始化，并且在写入编码数组之前我们又看到了先将space往前移动数组长度的距离，然后再写入，写入完成后调用endVector进行收尾，endVector再将vector的成员数量，在这里就是字符串数组的长度写入，然后调用offset返回写入的数据结构的起点。在进行下一步分析之前，可以根据上面的分析画出写入数据的结构，如下：
 
-![02_FlatBuffers中写入string的结构](/assets/posts/2016-03-14-android-flatbuffers/02_FlatBuffers中写入string的结构.png)
+![02_FlatBuffers中写入string的结构](/assets/posts/2016-03-14-android-flatbuffers/02_flatbuffers中写入string的结构.png)
 
 之后就是将字符串写入Table，下面列出相关代码：
 
