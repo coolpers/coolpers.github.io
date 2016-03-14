@@ -6,13 +6,14 @@ date:   2016-03-14
 categories: android | flatbuffers
 tags: android flatbuffers
 ---
-# android FlatBuffers剖析
+
+# android FlatBuffers剖析 #
 
 
-## 概述
+## 概述 ##
 FlatBuffers是google最新针对游戏开发退出的高性能的跨平台序列化工具，目前已经支持C++, C#, Go, Java, JavaScript, PHP, and Python (C和Ruby正在支持中)，相对于json和Protocol Buffers，FlatBuffers在序列化和反序列化方面表现更为优异，而且需要的资源更少，更适合大部分移动应用的使用场景。
 
-## FlatBuffers的特点
+## FlatBuffers的特点 ##
 除了高性能和低内存消耗的特点，FlatBuffers还有其他一些优势，官方的总结说明如下：
 
 * 不用解析也能对数据进行访问  
@@ -31,14 +32,14 @@ FlatBuffers支持选择性地写入数据成员，这不仅为某一个数据结
 
 FlatBuffers和Protocol Buffers是比较相似的，但是FlatBuffers不需要在读取成员变量之前必须将数据完全解析成对象，因为它所有信息的读取都是在对应的ByteBuffer中进行的，少了这些解析时必须为对象和成员变量分配的内存空间，就降低了解析过程中的内存消耗。json相对于FlatBuffers来说可读性更好，但是缺点也是明显的，那就是它的性能太低了，这点可以参见FlatBuffers的[benchmarks](http://google.github.io/flatbuffers/flatbuffers_benchmarks.html)。其他FlatBuffers的优势可以看[white paper](http://google.github.io/flatbuffers/flatbuffers_white_paper.html)。
 
-## FlatBuffers的基本使用
+## FlatBuffers的基本使用 ##
 由于本文仅仅介绍在android应用中使用FlatBuffers的方法，因此基本使用方法也只针对java语言进行介绍，其他语言的使用介绍请参看[官方介绍](http://google.github.io/flatbuffers/index.html#flatbuffers_overview)。
 
-### 下载FlatBuffers源码并编译
+### 下载FlatBuffers源码并编译 ###
 FlatBuffersS的源码包含flatc的源代码及支持的各种语言需要依赖的代码，目前托管在github上面（[这里](http://github.com/google/flatbuffers)）。下载完成后首先需要将源码中的flatc源码编译成自己所用平台上的flatc工具，flatc源码支持使用visual studio和xcode进行编译，也支持使用cmake进行跨平台编译，在mac上使用cmake进行编译的方法可以参看[这里](http://blog.csdn.net/yxz329130952/article/details/50706369)。在编译得到flatc后，就可以先将源码目录下自己所用语言（这里是java/com/google/flatbuffers）目录引入到自己的工程目录下就可以进行下一步工作了。
 
 
-### 编写schema文件
+### 编写schema文件 ###
 FlatBuffers需要一个用IDL语言描述的schema文件来定义传输数据的结构，IDL是一种类似于c语言的接口定义语言，它支持bool、short、float和double几种基本数据结构及数组、字符串、Struct和Table几种复杂类型。关于如何使用IDL来编写schema文件可以参看[这里](http://google.github.io/flatbuffers/flatbuffers_guide_writing_schema.html)，此处就不做过多的描述。这里为了方面还是以官方demo的schema文件（*monster.FlatBufferss*）为例，相应的代码如下：
 
 	// Example IDL file for our monster's schema.
@@ -67,7 +68,7 @@ FlatBuffers需要一个用IDL语言描述的schema文件来定义传输数据的
 	}
 	root_type Monster;
 
-### 编译schema文件
+### 编译schema文件 ###
 编写完schema文件后，就需要使用flatc将其转换成对应语言所对应的类，这里使用：
 
 	flatc --java samples/monster.FlatBufferss
@@ -78,7 +79,7 @@ FlatBuffers需要一个用IDL语言描述的schema文件来定义传输数据的
 
 这几个文件就是要读写这个schema文件对应的FlatBuffers数据结构所需要依赖的类。flatc会按照一套严格的标准来完成转换的工作，打开生成的这些文件可以看到，这几个类的实现有很多写死的常量，例如成员变量的索引和数组的大小等，这也就说明，一旦schema文件编写完成，也就相当于确定了相应数据的存储结构。flatc还支持很多参数来完成不同的工作，更多高级特性请参看[这里](http://google.github.io/flatbuffers/flatbuffers_guide_using_schema_compiler.html)
 
-#### 使用
+### 使用 ###
 将上一步使用flatc编译生成的java文件引入工程，这些文件就相当于是schema中定义的数据结构的java封装，我们可以很方便地通过这些类完成数据的序列化和反序列化工作。并且只要反序列化时使用的schema和序列化时使用的schema一致，那么一定可以完整地还原序列化时的数据，而和序列化和反序列化时使用的语言无关，这一点是通过FlatBuffers构建二进制数据的规则来保证的，稍后会具体分析这一点。引入编译生成的java类后，可以通过如下代码简单地进行demo测试。
 
 
@@ -210,11 +211,11 @@ FlatBuffers需要一个用IDL语言描述的schema文件来定义传输数据的
 相关的操作都已经在注释中写明白了。总的来说，FlatBuffers组织数据的格式和java class文件的格式有点类似，一些复杂类型的成员都先按照约定的格式先写入底层的ByteBuffer，这类似于java class中的常量区，然后使用这些常量的偏移来构建Table，这就相当于java class文件中的“表”。这样的结构决定了一些复杂类型的成员都是使用相对寻址进行数据访问的，即先从Table中取到成员常量的偏移，然后根据这个偏移再去常量真正存储的地址去取真实数据。但是Strcut类型的数据算是一个例外，FlatBuffers规定Struct类型用于存储那些约定成俗、永不改变的数据，这种类型的数据结构一旦确定便永远不会改变，在这个规定之下，为了提高数据访问速度，FlatBuffers单独对Struct使用了直接寻址的方式，这也要求了其数据必须进行内联存储。
 
 
-## FlatBuffers数据存储结构
+## FlatBuffers数据存储结构 ##
 虽然通过使用flatc对idl文件进行编译后，会自动生成我们定义的数据结构的java类，并且在使用过程中我们也不用关心数据的存储细节。但是如果你想要了解为什么FlatBuffers会如此高效，那么首先就不得不清楚FlatBuffers中的各种不同类型的数据结构是如何存储的。  
 FlatBuffers底层使用了java的ByteBuffer进行数据存储，ByteBuffer可以算是java NIO体系中的重要成员，很多jvm单独为它从heap中划分了一块存储区域进行数据存储，这样就避免了java数据到native层的传输需要经过java heap到native heap的数据拷贝过程，从而提高了数据读写的效率。但是ByteBuffer是针对直接进行数据存取操作的，虽然它提供了诸如asIntBuffer等方法来构造包装类以便针对int等类型的数据进行读取，但是毕竟FlatBuffers存储的一般并不是单一的数据类型，因此如果让用户来直接操作底层的ByteBuffer的话还是非常麻烦的。幸运的是FlatBuffersBuilder已经为我们封装了很多操作。
   
-### FlatBuffers对ByteBuffer的基本使用原则
+### FlatBuffers对ByteBuffer的基本使用原则 ###
 在后面详细介绍各种数据存储结构之前先说一下FlatBuffers是按照什么规则来使用ByteBuffer的，总的说来就是以下两点：
 
 * 小端模式  
@@ -372,10 +373,10 @@ FlatBuffers在实现字符串写入的时候将字符串的编码数组当做了
 这里先不讲*name()*函数如何通过vtable定位到table的数据字段，先认为*__string()* 函数传入的offset参数即是刚才写入string相对偏移的地址即可，从*__string()*函数的实现可以看到，首先是通过当前位置和写入的偏移计算出string数据存储的真正位置，然后根据string数据的存储格式取到string的真正数据，结束。  
 从上面分析流程可以看出，在FlatBuffers对ByteBuffer写入顺序和读取顺序不一致的情况，使用相对寻址都不用关心我们当前读取和写入的顺序这个细节。
 
-### FlatBuffers部分复杂数据结构存储分析
+### FlatBuffers部分复杂数据结构存储分析 ###
 有了FlatBuffers数据存储结构的基础后，就可以紧接着分析FlatBuffers支持的几个复杂数据结构的存储了。
 
-#### Struct类型
+#### Struct类型 ####
 除了基本类型之外，FlatBuffers中只有Struct类型使用直接寻址进行数据访问。因此首先就来分析这种数据结构是如何进行存储的，还是结合之前的demo进行讲解。首先来看看Struct结构的java类实现：
 
 	/**
@@ -419,7 +420,7 @@ FlatBuffers在实现字符串写入的时候将字符串的编码数组当做了
 
 从这个实现可以看到，子类自己维护了成员写入和解析的工作，例如自动根据索引写入x,y,z数据，以及根据索引从ByteBuffer中解析对应的成员变量等。因此，只要保证调用*Vec3.__init*方法的时候，*i*参数和调用*Vec3.createVec3*时返回的偏移相同，就一定可以成功从ByteBuffer中解析出数据。
 
-#### Union类型
+#### Union类型 ####
 这个类型也比较特殊，FlatBuffers规定这个类型在使用上具有如下两个限制：
 
 1. Union类型的成员只能是Table类型。
@@ -463,7 +464,7 @@ Union类的实现只是保存了Union类能够存储和表示的类型的名称�
     
 因此，在序列化Union的时候一般先写入Union的type，然后再写入Union的数据偏移；在反序列化Union的时候一般先解析出Union的type，然后再按照type对应的Table类型来解析Union对应的数据。
 
-#### enum类型
+#### enum类型 ####
 FlatBuffers中的enum类型在数据存储的时候是和byte类型存储的方式一样的，因为和Union类型相似，enum类型在FlatBuffers中也没有单独的类与它对应，在schema中声明为enum的类会被编译生成单独的类。例如demo中的Color类被编译转换成了如下代码：
 
 	public final class Color {
@@ -614,7 +615,7 @@ Vector在序列化数据时先会从高位到低位依次存储vector内部的�
 在反序列化的时候，先通过*__offset*得到Vector相对于外部Table数据字段的偏移，然后调用 *__vector*函数得到这个Vector真正存储数据的位置，但是刚才已经说明，由于Vector中存储的只是Weapon的相对地址，因此绝对偏移地址：__vector(o) + j x 4  写入的内容就是第j个Vector变量相对于写入地址的偏移，因此还要通过调用一次__indirect方法进行相对寻址才能得到Vector第j个成员Weapon的偏移地址。
 
 
-#### Table类型
+#### Table类型 ####
 Table类型是FlatBuffers中的核心类型，也是其中存储最为复杂的类型，首先我们来看Table类型的存储结构，如下图：	
 
 ![04_flatbuffers中Table存储结构](/assets/posts/2016-03-14-android-flatbuffers/04_flatbuffers中Table存储结构.png)
@@ -901,10 +902,10 @@ Table类型是FlatBuffers中的核心类型，也是其中存储最为复杂的�
     
 以上代码*FlatBuilder.addShort()*方法在force_defaults为false的情况下，如果写入的值和当前值相同，那么并不会将数据写入到table_data中，相应的*vtable[i]*就为0，并且后面通过*FlatBuilder.endObject()*写入到ByteBuffer中的vtable的第i个成员也为0。此后，调用*Monster.hp()*的时候*__offset()*函数返回的值就是0，在这种情况下，FlatBuffers不会再去table_data中去寻找成员的值或者偏移，而是直接返回了schema中规定的默认值。同理，复杂类型数据也有和简单数据类型类似的处理。
 
-##结束
+## 结束 ##
 本文结合demo和源码对FlatBuffers进行了剖析，在解释原理的时候为了方便省略了其中的一些细节，对于省略的内容并不是不重要，比如说其中的对齐操作和相对偏移的计算都是至关重要的，大家可以参考本文大概把握FlatBuffers的原理，然后对其中的一些细节使用自己的方法来理解。本文的内容是我个人总结，如有偏颇，烦请指正！
 
-##参考
+## 参考 ##
 [FlatBuffer Overview](http://google.github.io/flatbuffers/index.html#flatbuffers_overview)
     
     
